@@ -16,7 +16,7 @@ module.exports.register = async (req, res, next) => {
         })
     } catch (e) {
         req.flash('error', e.message);
-        res.redirect('register');
+        res.redirect('/register');
     }
 }
 
@@ -31,12 +31,30 @@ module.exports.login = (req, res) => {
     res.redirect(redirectUrl);
 }
 
+// module.exports.logout = (req, res, next) => {
+//     req.logout(function (err) {
+//         if (err) {
+//             return next(err);
+//         }
+//         req.flash('success', 'Goodbye!');
+//         res.redirect('/campgrounds');
+//     });
+// }
 module.exports.logout = (req, res, next) => {
+    console.log('Logging out user');
     req.logout(function (err) {
         if (err) {
+            console.error(err);
             return next(err);
         }
         req.flash('success', 'Goodbye!');
-        res.redirect('/campgrounds');
+        // res.redirect('/campgrounds');
+        req.session.destroy(err => {
+            if (err) {
+                console.error('Error destroying session:', err);
+                return next(err);
+            }
+            res.redirect('/campgrounds');
+        });
     });
-}
+};

@@ -14,6 +14,10 @@ router.route('/login')
     .get(users.renderLogin)
     .post(storeReturnTo, passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), users.login)
 
-router.get('/logout', users.logout)
+// router.get('/logout', users.logout)
+router.get('/logout', (req, res, next) => {
+    console.log('Logout route hit');
+    users.logout(req, res, next);
+});
 
 module.exports = router;
